@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import Sidebar from "../components/SIdebar";
 import { toast } from "react-toastify";
@@ -20,17 +20,24 @@ const LeadDetail = () => {
   const API_URL = `https://anvaya-backend-gilt.vercel.app/leads/${id}`;
   const AGENT_API = `https://anvaya-backend-gilt.vercel.app/agents`;
 
+  // fetching the comments -> made a separate fetch
+    //useCallback hook is a memorization tool in React. why ?? -> To prevent a function from being recreated on every re-render of its parent component unless one of its dependencies has changed. 
+  const fetchComments = useCallback(async () => { //useCallback memorizes this entire inner function
+    try {
+      const response = await axios.get(
+        `https://anvaya-backend-gilt.vercel.app/leads/${id}/comments`
+      );
+      setComments(response.data);
+    } catch (err) {
+      console.error("Error fetching comments:", err);
+    }
+  }, [id]);  //This is the array of dependencies. It tells React when it is necessary to create a new version of the function.
 
-    // fetching the comments -> made a separate fetch
-    const fetchComments = async () => {
-  try {
-    const response = await axios.get(`https://anvaya-backend-gilt.vercel.app/leads/${id}/comments`);
-    setComments(response.data);
-  } catch (err) {
-    console.error('Error fetching comments:', err);
-  }
-};
-// eslint-disable-next-line
+  //how does it works ? 
+  // case 1: id is the same -> React checks [id]. The value hasn't changed. so, fetchComments remains the exact same function reference as before.
+  //case 2: id is changed -> React checks [id]. The value has changed. so, useCallback creates a new function reference for fetchComments that captures the new id.
+  
+  // eslint-disable-next-line
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,7 +55,7 @@ const LeadDetail = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [API_URL, AGENT_API, fetchComments]);
 
   const agentNameHandler = (event) => {
     setAgentId(event.target.value);
@@ -146,7 +153,9 @@ const LeadDetail = () => {
                 {lead?.priority}
               </p>
               <p>
-                <span className="font-medium text-gray-600">Time to Close:</span>{" "}
+                <span className="font-medium text-gray-600">
+                  Time to Close:
+                </span>{" "}
                 {lead?.timeToClose} Days
               </p>
             </div>
