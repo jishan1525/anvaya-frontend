@@ -6,10 +6,9 @@ const Dashboard = () => {
   const API_URL = "https://anvaya-backend-gilt.vercel.app/leads";
 
   // State variables for data fetching
-  const [leadsData, setLeadsData] = useState(null); 
+  const [leadsData, setLeadsData] = useState(null); //leads
   const [loading, setLoading] = useState(false); 
   const [error, setError] = useState(null); 
-  
   const [filterStatus, setFilterStatus] = useState('All'); 
 
 
@@ -34,8 +33,8 @@ const Dashboard = () => {
       ? leadsData 
       : leadsData.filter((lead) => lead.status === filterStatus))
   : [];
-  
- console.log(filterStatus)
+  console.log(filteredLeads);
+
 
  const statusCounts =leadsData ? (leadsData.reduce((acc, lead) => {
     acc[lead.status] = (acc[lead.status] || 0) + 1;
@@ -88,7 +87,7 @@ const Dashboard = () => {
         </div>
 
         {/* Right side - add lead button */}
-        <Link to="/leads/new"> 
+        <Link to="/"> 
           <button className="bg-sky-600 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-sky-700 hover:shadow-lg transition-all text-base flex items-center gap-1">
             Add New Lead
           </button>
@@ -128,7 +127,7 @@ const Dashboard = () => {
               {filteredLeads.length > 0 ? (
                 
                 filteredLeads.map((lead) => (
-                  <div key={lead._id} className="bg-white shadow-lg border border-gray-100 rounded-xl p-5 text-center transition-all duration-300 hover:shadow-xl flex flex-col justify-between h-full">
+                  <div key={lead.id} className="bg-white shadow-lg border border-gray-100 rounded-xl p-5 text-center transition-all duration-300 hover:shadow-xl flex flex-col justify-between h-full">
                     <div>
                       <h3 className="font-extrabold text-gray-800 text-lg mb-2">
                           Lead Name: {lead.name}
@@ -146,7 +145,7 @@ const Dashboard = () => {
                       </p>
                     </div>
                     <div>
-                        <Link to={`/leads/${lead._id}`}>
+                        <Link to={`/leads/${lead.id}`}>
                             <button className="w-full bg-sky-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-sky-700 transition-colors shadow-md mt-2">
                                 Details
                             </button>
