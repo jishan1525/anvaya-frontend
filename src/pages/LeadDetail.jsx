@@ -18,19 +18,19 @@ const LeadDetail = () => {
 
   //API ENDPOINTS
   const API_URL = `https://anvaya-backend-gilt.vercel.app/leads/${id}`;
-  const COMMENT_API = `https://anvaya-backend-gilt.vercel.app/leads/${id}/comments`;
   const AGENT_API = `https://anvaya-backend-gilt.vercel.app/agents`;
 
 
     // fetching the comments -> made a separate fetch
     const fetchComments = async () => {
   try {
-    const response = await axios.get(COMMENT_API);
+    const response = await axios.get(`https://anvaya-backend-gilt.vercel.app/leads/${id}/comments`);
     setComments(response.data);
   } catch (err) {
     console.error('Error fetching comments:', err);
   }
 };
+// eslint-disable-next-line
   useEffect(() => {
     const fetchData = async () => {
       try {
