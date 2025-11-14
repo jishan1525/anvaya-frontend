@@ -87,7 +87,7 @@ const Dashboard = () => {
         </div>
 
         {/* Right side - add lead button */}
-        <Link to="/"> 
+        <Link to="/addLead"> 
           <button className="bg-sky-600 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-sky-700 hover:shadow-lg transition-all text-base flex items-center gap-1">
             Add New Lead
           </button>
