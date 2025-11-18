@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { toast } from "react-toastify";
 
+
 const LeadDetail = () => {
   const { id } = useParams();
 
