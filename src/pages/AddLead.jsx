@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import Sidebar from "../components/SIdebar";
+import Sidebar from "../components/Sidebar";
 
 const AddLead = () => {
   const [name, setName] = useState("");
@@ -66,7 +66,7 @@ const AddLead = () => {
     };
 
 
-    console.log(newLead);
+    
     axios
       .post(
         `https://anvaya-backend-gilt.vercel.app/leads`,
@@ -239,7 +239,7 @@ const AddLead = () => {
                 <label className="block text-sm font-medium text-gray-600 mb-1">
                   Closed At (Optional)
                 </label>
-                <input max={new Date().toISOString().split("T")[0]}
+                <input min={new Date().toISOString().split("T")[0]}
                   type="date"
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                   onChange={(e) => setClosedAt(e.target.value)}

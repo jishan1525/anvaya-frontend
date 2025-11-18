@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
-import Sidebar from "../components/SIdebar";
+import Sidebar from "../components/Sidebar";
 import { toast } from "react-toastify";
 
 const LeadDetail = () => {
@@ -36,7 +36,7 @@ const LeadDetail = () => {
   //how does it works ? 
   // case 1: id is the same -> React checks [id]. The value hasn't changed. so, fetchComments remains the exact same function reference as before.
   //case 2: id is changed -> React checks [id]. The value has changed. so, useCallback creates a new function reference for fetchComments that captures the new id.
-  
+
   // eslint-disable-next-line
   useEffect(() => {
     const fetchData = async () => {
