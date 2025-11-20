@@ -3,6 +3,8 @@ import Sidebar from "../components/Sidebar";
 import axios from "axios";
 
 const AgentView = () => {
+
+    //state variable
   const [agents, setAgents] = useState();
   const [leads, setLeads] = useState();
   const [statusFilter, setStatusFilter] = useState("");
@@ -19,7 +21,6 @@ const AgentView = () => {
       setLoading(true);
       const LeadResponse = await axios.get(API_URL);
       setLeads(LeadResponse.data);
-
       const AgentResponse = await axios.get(AGENT_API);
       setAgents(AgentResponse.data);
     } catch (err) {
@@ -35,6 +36,13 @@ const AgentView = () => {
   // GROUPING LOGIC
   const grouped = {};
 
+
+//   {
+//.  every agent has a bucket ready to store their leads
+//   "123": { agentName: "John", leads: [] },
+//   "456": { agentName: "Sarah", leads: [] }
+// }
+
   // Create empty group for every agent
   agents?.forEach((agent) => {
     grouped[agent._id] = {
@@ -43,6 +51,7 @@ const AgentView = () => {
     };
   });
 
+  //Loop through each lead and put it into its agent’s bucket
   // Fill with leads + filters
   leads?.forEach((lead) => {
     const agentId = lead.salesAgent.id;
@@ -52,15 +61,19 @@ const AgentView = () => {
 
     const priorityMatch =
       priorityFilter === "" || lead.priority === priorityFilter;
-
+    //Push only the leads that match both filters
     if (grouped[agentId] && statusMatch && priorityMatch) {
       grouped[agentId].leads.push(lead);
     }
   });
-
+  //Convert grouped object into an array to use .map()
+//   [
+//   { agentName: "John", leads: [...] },
+//   { agentName: "Sarah", leads: [...] }
+// ]
   const agentList = Object.values(grouped);
 
-  // Sorting logic
+  // Sorting
   agentList.forEach((agent) => {
     if (sortingFilter === "High to Low") {
       agent.leads.sort(
@@ -84,7 +97,7 @@ const AgentView = () => {
 
         <div className="flex flex-col w-full">
 
-          {/* ---------------- FILTERS ---------------- */}
+          {/*  FILTERS */}
           <div className="flex gap-6 p-6 bg-white shadow rounded-lg border mb-6 mx-6 mt-6">
 
             {/* Status Filter */}
@@ -136,7 +149,7 @@ const AgentView = () => {
             </div>
           </div>
 
-          {/* ---------------- MAIN BODY ---------------- */}
+         
           {/* MAIN BODY */}
 <div className="px-6 py-4 w-full">
 

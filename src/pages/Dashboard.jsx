@@ -101,7 +101,7 @@ const Dashboard = () => {
         <div className="w-56 bg-sky-800 shadow-xl p-6 flex flex-col items-start min-h-screen border-r border-sky-900">
           <ul className="space-y-2 w-full">
             {[
-                { name: 'Leads', path: '/' },
+                { name: 'Leads', path: '/leadStatus' },
                 { name: 'Sales', path: '/sales' },
                 { name: 'Agents', path: '/agents' },
                 { name: 'Reports', path: '/reports' },
