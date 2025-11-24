@@ -10,6 +10,7 @@ import SalesAgent from './pages/SalesAgent';
 import AddAgentModal from './components/AddAgentModal';
 import AgentView from './pages/AgentView';
 import LeadStatusView from './pages/LeadStatusView';
+import LeadList from './pages/LeadList';
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
         <Route path="/addAgent" element={<AddAgentModal/>} />
         <Route path='/sales' element={<AgentView/>}/>
         <Route path="leadStatus" element={<LeadStatusView/>}/>
-        
+        <Route path="leadList" element={<LeadList/>}/>
       </Routes>
       <ToastContainer position="top-center" />
     </>

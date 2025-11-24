@@ -105,7 +105,7 @@ const Dashboard = () => {
                 { name: 'Sales', path: '/sales' },
                 { name: 'Agents', path: '/agents' },
                 { name: 'Reports', path: '/reports' },
-                { name: 'Settings', path: '/settings' },
+                { name: 'Lead List', path: '/leadList' },
             ].map((item) => (
                 <li key={item.name} className="w-full">
                     <Link 
