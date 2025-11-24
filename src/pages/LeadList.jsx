@@ -4,7 +4,7 @@ import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
 
 const LeadList = () => {
-  // -------------------- STATE VARIABLES --------------------
+  // STATE VARIABLES
   const [agents, setAgents] = useState([]);
   const [leads, setLeads] = useState([]);
   const [AgentFilter, setAgentFilter] = useState("");
@@ -22,15 +22,16 @@ const LeadList = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
         const LeadResponse = await axios.get(API_URL);
         setLeads(LeadResponse.data);
 
         const AgentResponse = await axios.get(AGENT_API);
         setAgents(AgentResponse.data);
-      } catch (err) {
+      } 
+      catch (err) {
         console.error("Error fetching data:", err);
-      } finally {
+      } 
+      finally {
         setLoading(false);
       }
     };

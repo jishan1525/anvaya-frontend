@@ -11,6 +11,7 @@ import AddAgentModal from './components/AddAgentModal';
 import AgentView from './pages/AgentView';
 import LeadStatusView from './pages/LeadStatusView';
 import LeadList from './pages/LeadList';
+import Reports from './pages/Reports';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path='/sales' element={<AgentView/>}/>
         <Route path="leadStatus" element={<LeadStatusView/>}/>
         <Route path="leadList" element={<LeadList/>}/>
+        <Route path="reports" element={<Reports/>}/>
       </Routes>
       <ToastContainer position="top-center" />
     </>
