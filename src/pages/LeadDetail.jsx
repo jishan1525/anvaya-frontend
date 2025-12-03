@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
-import { Link, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 const LeadDetail = () => {
   const { id } = useParams();
@@ -68,6 +68,7 @@ const LeadDetail = () => {
     };
     fetchData();
   }, [API_URL, AGENT_API, fetchComments]);
+
   // handler to open modal with existing values
   const openEditModal = () => {
     setEditData({
@@ -179,152 +180,152 @@ const LeadDetail = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans">
-      {/* HEADER */}
-      <h1 className="font-extrabold text-3xl sm:text-4xl p-6 text-center bg-sky-600 text-white sticky top-0 z-20 shadow-lg">
+      {/* SIDEBAR */}
+      <Sidebar />
+
+      {/* HEADER - Position below mobile menu, shift right on desktop */}
+      <h1 className="font-extrabold text-3xl sm:text-4xl p-6 text-center bg-sky-600 text-white sticky top-16 md:top-0 z-20 shadow-lg md:pl-56">
         Lead Management : {lead?.name}
       </h1>
 
-      <div className="flex">
-        <Sidebar />
+      {/* MAIN CONTENT - Shift right on desktop */}
+      <div className="md:pl-56 p-8 space-y-8">
+        {/* LEAD DETAILS CARD */}
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mt-2">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4 ">
+            Lead Details
+          </h2>
 
-        {/* MAIN CONTENT */}
-        <div className="flex-1 p-8 space-y-8">
-          {/* LEAD DETAILS CARD */}
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Lead Details
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700">
-              <p>
-                <span className="font-medium text-gray-600">Lead Name:</span>{" "}
-                {lead?.name}
-              </p>
-              <p>
-                <span className="font-medium text-gray-600">Sales Agent:</span>{" "}
-                {agentName?.name}
-              </p>
-              <p>
-                <span className="font-medium text-gray-600">Lead Source:</span>{" "}
-                {lead?.source}
-              </p>
-              <p>
-                <span className="font-medium text-gray-600">Lead Status:</span>{" "}
-                {lead?.status}
-              </p>
-              <p>
-                <span className="font-medium text-gray-600">Priority:</span>{" "}
-                {lead?.priority}
-              </p>
-              <p>
-                <span className="font-medium text-gray-600">
-                  Time to Close:
-                </span>{" "}
-                {lead?.timeToClose} Days
-              </p>
-            </div>
-
-            <div className="mt-6">
-              <button
-                onClick={openEditModal}
-                className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 shadow"
-              >
-                Edit Lead
-              </button>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700">
+            <p>
+              <span className="font-medium text-gray-600">Lead Name:</span>{" "}
+              {lead?.name}
+            </p>
+            <p>
+              <span className="font-medium text-gray-600">Sales Agent:</span>{" "}
+              {agentName?.name}
+            </p>
+            <p>
+              <span className="font-medium text-gray-600">Lead Source:</span>{" "}
+              {lead?.source}
+            </p>
+            <p>
+              <span className="font-medium text-gray-600">Lead Status:</span>{" "}
+              {lead?.status}
+            </p>
+            <p>
+              <span className="font-medium text-gray-600">Priority:</span>{" "}
+              {lead?.priority}
+            </p>
+            <p>
+              <span className="font-medium text-gray-600">
+                Time to Close:
+              </span>{" "}
+              {lead?.timeToClose} Days
+            </p>
           </div>
 
-          {/* COMMENT SECTION */}
-          <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              Comments
-            </h2>
-
-            {/* Comments Display */}
-            {comments && comments.length > 0 ? (
-              <div className="space-y-3 mb-6">
-                {comments.map((comm, index) => (
-                  <div
-                    key={index}
-                    className="border border-gray-200 rounded-lg p-3 bg-gray-50 shadow-sm"
-                  >
-                    <p className="text-gray-800">{comm.commentText}</p>
-                    <div className="text-sm text-gray-500 mt-1">
-                      <span>{comm.authorName}</span> •{" "}
-                      <span>
-                        {new Date(comm.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500 italic mb-6">
-                No comments found yet.
-              </p>
-            )}
-
-            {/* Add Comment Form */}
-            <form
-              onSubmit={formSubmitHandler}
-              className="space-y-4 border-t pt-4"
+          <div className="mt-6">
+            <button
+              onClick={openEditModal}
+              className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 shadow"
             >
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium text-gray-600 mb-1"
-                >
-                  Select Agent
-                </label>
-                <select
-                  id="name"
-                  onChange={agentNameHandler}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                >
-                  <option value="">-- Select an Agent --</option>
-                  {agents ? (
-                    agents.map((agent) => (
-                      <option key={agent._id} value={agent._id}>
-                        {agent.name}
-                      </option>
-                    ))
-                  ) : (
-                    <option>Loading...</option>
-                  )}
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="comment"
-                  className="block text-sm font-medium text-gray-600 mb-1"
-                >
-                  Add Comment
-                </label>
-                <textarea
-                  id="comment"
-                  rows={4}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Type your comment here..."
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="bg-sky-600 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-sky-700 transition-all w-full sm:w-auto"
-              >
-                Add Comment
-              </button>
-            </form>
+              Edit Lead
+            </button>
           </div>
         </div>
+
+        {/* COMMENT SECTION */}
+        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Comments
+          </h2>
+
+          {/* Comments Display */}
+          {comments && comments.length > 0 ? (
+            <div className="space-y-3 mb-6">
+              {comments.map((comm, index) => (
+                <div
+                  key={index}
+                  className="border border-gray-200 rounded-lg p-3 bg-gray-50 shadow-sm"
+                >
+                  <p className="text-gray-800">{comm.commentText}</p>
+                  <div className="text-sm text-gray-500 mt-1">
+                    <span>{comm.authorName}</span> •{" "}
+                    <span>
+                      {new Date(comm.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 italic mb-6">
+              No comments found yet.
+            </p>
+          )}
+
+          {/* Add Comment Form */}
+          <form
+            onSubmit={formSubmitHandler}
+            className="space-y-4 border-t pt-4"
+          >
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-600 mb-1"
+              >
+                Select Agent
+              </label>
+              <select
+                id="name"
+                onChange={agentNameHandler}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              >
+                <option value="">-- Select an Agent --</option>
+                {agents ? (
+                  agents.map((agent) => (
+                    <option key={agent._id} value={agent._id}>
+                      {agent.name}
+                    </option>
+                  ))
+                ) : (
+                  <option>Loading...</option>
+                )}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="comment"
+                className="block text-sm font-medium text-gray-600 mb-1"
+              >
+                Add Comment
+              </label>
+              <textarea
+                id="comment"
+                rows={4}
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Type your comment here..."
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              className="bg-sky-600 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-sky-700 transition-all w-full sm:w-auto"
+            >
+              Add Comment
+            </button>
+          </form>
+        </div>
       </div>
-      {/* editUI */}
+
+      {/* EDIT MODAL */}
       {isEditOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-xl w-11/12 md:w-1/2 shadow-xl">
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 p-4">
+          <div className="bg-white p-6 rounded-xl w-full max-w-2xl shadow-xl max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
               Edit Lead
             </h2>
@@ -332,27 +333,31 @@ const LeadDetail = () => {
             <form onSubmit={updateLeadHandler} className="space-y-4">
               {/* name */}
               <div>
-                <label className="text-gray-600 text-sm">Lead Name</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Lead Name
+                </label>
                 <input
                   value={editData.name}
                   onChange={(e) =>
                     setEditData({ ...editData, name: e.target.value })
                   }
                   required
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                 />
               </div>
 
               {/* agent */}
               <div>
-                <label className="text-gray-600 text-sm">Sales Agent</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Sales Agent
+                </label>
                 <select
                   value={editData.salesAgent}
                   onChange={(e) =>
                     setEditData({ ...editData, salesAgent: e.target.value })
                   }
                   required
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                 >
                   <option value="">-- Select Agent --</option>
                   {agents?.map((agent) => (
@@ -365,14 +370,16 @@ const LeadDetail = () => {
 
               {/* status */}
               <div>
-                <label className="text-gray-600 text-sm">Status</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Status
+                </label>
                 <select
                   value={editData.status}
                   onChange={(e) =>
                     setEditData({ ...editData, status: e.target.value })
                   }
                   required
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                 >
                   <option value="New">New</option>
                   <option value="Contacted">Contacted</option>
@@ -384,14 +391,16 @@ const LeadDetail = () => {
 
               {/* source */}
               <div>
-                <label className="text-gray-600 text-sm">Source</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Source
+                </label>
                 <select
                   value={editData.source}
                   onChange={(e) =>
                     setEditData({ ...editData, source: e.target.value })
                   }
                   required
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                 >
                   <option value="Website">Website</option>
                   <option value="Referral">Referral</option>
@@ -404,40 +413,46 @@ const LeadDetail = () => {
 
               {/* tags */}
               <div>
-                <label className="text-gray-600 text-sm">Tags</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Tags
+                </label>
                 <input
                   value={editData.tags}
                   onChange={(e) =>
                     setEditData({ ...editData, tags: e.target.value })
                   }
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                 />
               </div>
 
               {/* timeToClose */}
               <div>
-                <label className="text-gray-600 text-sm">Time To Close</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Time To Close (Days)
+                </label>
                 <input
                   type="number"
                   value={editData.timeToClose}
                   onChange={(e) =>
                     setEditData({ ...editData, timeToClose: e.target.value })
                   }
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                   required
                 />
               </div>
 
               {/* priority */}
               <div>
-                <label className="text-gray-600 text-sm">Priority</label>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Priority
+                </label>
                 <select
                   value={editData.priority}
                   onChange={(e) =>
                     setEditData({ ...editData, priority: e.target.value })
                   }
                   required
-                  className="w-full border rounded-lg px-3 py-2"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-sky-500 outline-none"
                 >
                   <option value="High">High</option>
                   <option value="Medium">Medium</option>
@@ -450,14 +465,14 @@ const LeadDetail = () => {
                 <button
                   type="button"
                   onClick={() => setIsEditOpen(false)}
-                  className="px-4 py-2 bg-gray-300 rounded-lg"
+                  className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-sky-600 text-white rounded-lg shadow hover:bg-sky-700"
+                  className="px-6 py-2 bg-sky-600 text-white rounded-lg shadow hover:bg-sky-700 transition"
                 >
                   Save Changes
                 </button>

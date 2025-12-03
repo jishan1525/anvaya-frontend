@@ -1,14 +1,13 @@
-
-
-import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Sidebar = () => {
+import { useState } from "react";
+
+const DashboardSidebar = () => {
   const [open, setOpen] = useState(false);
 
   return (
     <>
-      {/* Mobile Top Navbar (Fixed) */}
+      {/* Mobile Top Navbar */}
       <div
         className="md:hidden bg-sky-800 text-white p-4 flex justify-between items-center
         fixed top-0 left-0 w-full z-50 shadow-md"
@@ -28,7 +27,7 @@ const Sidebar = () => {
       {/* Sidebar (Desktop + Mobile) */}
       <div
         className={`
-          fixed top-16 md:top-0 left-0 h-full bg-sky-600 border-r border-sky-900 shadow-xl 
+          fixed top-0 left-0 h-full bg-sky-600 border-r border-sky-900 shadow-xl 
           p-6 flex flex-col items-start w-56 z-40 transition-transform duration-300
 
           ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
@@ -44,13 +43,25 @@ const Sidebar = () => {
         </button>
 
         {/* Button */}
-        <Link
-          to="/"
-          className="w-full text-white border text-lg font-medium px-4 py-3 rounded-lg 
-                     transition-all duration-200 hover:bg-sky-700 hover:shadow-md active:bg-sky-800"
-        >
-          Back to Dashboard
-        </Link>
+        <ul className="space-y-2 w-full">
+            {[
+                { name: 'Leads', path: '/leadStatus' },
+                { name: 'Sales', path: '/sales' },
+                { name: 'Agents', path: '/agents' },
+                { name: 'Reports', path: '/reports' },
+                { name: 'Lead List', path: '/leadList' },
+                { name: 'Settings', path: '/settings' },
+            ].map((item) => (
+                <li key={item.name} className="w-full">
+                    <Link 
+                        to={item.path} 
+                        className="text-white text-lg font-medium block px-4 py-3 rounded-lg transition-all duration-200 hover:bg-sky-700 hover:shadow-md active:bg-sky-800"
+                    >
+                        {item.name}
+                    </Link>
+                </li>
+            ))}
+          </ul>
       </div>
 
       {/* Background overlay */}
@@ -64,4 +75,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default DashboardSidebar;

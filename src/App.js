@@ -12,6 +12,7 @@ import AgentView from './pages/AgentView';
 import LeadStatusView from './pages/LeadStatusView';
 import LeadList from './pages/LeadList';
 import Reports from './pages/Reports';
+import Settings from './pages/Settings';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="leadStatus" element={<LeadStatusView/>}/>
         <Route path="leadList" element={<LeadList/>}/>
         <Route path="reports" element={<Reports/>}/>
+        <Route path="settings" element={<Settings/>}/>
       </Routes>
       <ToastContainer position="top-center" />
     </>

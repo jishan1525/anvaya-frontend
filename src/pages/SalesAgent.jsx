@@ -50,6 +50,7 @@ const SalesAgent = () => {
     // Refresh list
     axios.get(AGENT_API).then((res) => setAgentData(res.data));
   };
+  
   const handleFailure = () => {
     toast.error("Please check the email!");
 
@@ -58,47 +59,60 @@ const SalesAgent = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* HEADER */}
-      <h1 className="font-extrabold text-3xl sm:text-4xl p-6 text-center bg-sky-600 text-white sticky top-0 z-20 shadow-lg">
+    <div className="min-h-screen bg-gray-50">
+      {/* SIDEBAR */}
+      <Sidebar />
+
+      {/* HEADER - Position below mobile menu, shift right on desktop */}
+      <h1 className="font-extrabold text-3xl sm:text-4xl p-6 text-center bg-sky-600 text-white sticky top-16 md:top-0 z-20 shadow-lg md:pl-56">
         Sales Agent List
       </h1>
 
-      {/* MAIN LAYOUT */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* SIDEBAR */}
-        <Sidebar />
+      {/* MAIN CONTENT - Shift right on desktop */}
+      <div className="md:pl-56 p-2 px-2 bg-gray-50">
+        {/* INFO BAR */}
+        <div className="mb-6 flex p-6 justify-between items-center mt-4">
+          <h2 className="text-2xl font-bold text-gray-800">
+            All Agents ({agentData?.length || 0})
+          </h2>
+          
+          {/* ADD NEW AGENT BUTTON */}
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition shadow-md mt-4"
+          >
+            Add New Agent
+          </button>
+        </div>
 
-        {/* MAIN CONTENT */}
-        <div className="flex-1 p-8 overflow-y-auto bg-gray-50">
-          {/* GRID OF AGENTS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {agentData?.map((agent) => (
+        {/* GRID OF AGENTS */}
+        {agentData && agentData.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-6">
+            {agentData.map((agent) => (
               <div
                 key={agent._id}
-                className="bg-white shadow-lg border border-gray-100 rounded-xl p-5 hover:shadow-xl transition-all"
+                className="bg-white shadow-lg border border-gray-100 rounded-xl p-5 hover:shadow-xl transition-all duration-200"
               >
-                <p>
-                  <span className="text-lg font-extrabold text-gray-700 block">
+                <div className="flex flex-col">
+                  <span className="text-lg font-extrabold text-gray-800 mb-1">
                     {agent?.name}
                   </span>
-                  <span className="text-sm text-gray-500">{agent?.email}</span>
-                </p>
+                  <span className="text-sm text-gray-500 break-words">
+                    {agent?.email}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
-
-          {/* ADD NEW AGENT BUTTON */}
-          <div className="mt-8">
-            <button
-              onClick={() => setShowModal(true)}
-              className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition"
-            >
-              Add New Agent
-            </button>
+        ) : (
+          <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+            <p className="text-gray-500 text-lg">No agents found.</p>
+            <p className="text-gray-400 text-sm mt-2">Click "Add New Agent" to get started.</p>
           </div>
-        </div>
+        )}
       </div>
+
+      {/* MODAL */}
       {showModal && (
         <AddAgentModal
           onClose={() => setShowModal(false)}
@@ -109,4 +123,5 @@ const SalesAgent = () => {
     </div>
   );
 };
+
 export default SalesAgent;
