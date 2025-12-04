@@ -12,6 +12,7 @@ const LeadList = () => {
   const [priorityFilter, setPriorityFilter] = useState("");
   const [sortingFilter, setSortingFilter] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // API URLs
   const API_URL = `https://anvaya-backend-gilt.vercel.app/leads`;
@@ -21,6 +22,7 @@ const LeadList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setError(null);
         setLoading(true);
         const LeadResponse = await axios.get(API_URL);
         setLeads(LeadResponse.data);
@@ -29,6 +31,7 @@ const LeadList = () => {
         setAgents(AgentResponse.data);
       } catch (err) {
         console.error("Error fetching data:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
@@ -98,8 +101,10 @@ const LeadList = () => {
               Filter by Sales Agent
             </label>
             <select
+              value={AgentFilter}
               onChange={(e) => setAgentFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none"
+              disabled={loading}
+              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value={""}>All</option>
               {agents?.map((agent) => (
@@ -116,8 +121,10 @@ const LeadList = () => {
               Filter by Status
             </label>
             <select
+              value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none"
+              disabled={loading}
+              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value={""}>All Status</option>
               <option value={"New"}>New</option>
@@ -134,8 +141,10 @@ const LeadList = () => {
               Sort by Priority
             </label>
             <select
+              value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none"
+              disabled={loading}
+              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value={""}>All Priorities</option>
               <option value={"High to Low"}>High to Low</option>
@@ -149,8 +158,10 @@ const LeadList = () => {
               Sort by Time to Close
             </label>
             <select
+              value={sortingFilter}
               onChange={(e) => setSortingFilter(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none"
+              disabled={loading}
+              className="border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-sky-500 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value={"High to Low"}>Latest to Oldest</option>
               <option value={"Low to High"}>Oldest to Latest</option>
@@ -169,17 +180,25 @@ const LeadList = () => {
 
         {/*  MAIN BODY */}
         <div className="px-6 py-4 w-full">
-          {/* LOADING */}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="text-center">
-                <div className="animate-spin h-10 w-10 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
-                <p className="mt-3 text-gray-600 font-medium">
-                  Loading leads...
-                </p>
+          {/* LOADING STATE */}
+          {loading && (
+            <div className="flex flex-col items-center justify-center py-32">
+              <div className="animate-spin h-10 w-10 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+              <p className="text-xl text-sky-600 font-medium">Loading leads...</p>
+            </div>
+          )}
+
+          {/* ERROR STATE */}
+          {error && !loading && (
+            <div className="flex items-center justify-center py-32">
+              <div className="text-xl text-red-600 p-4 border border-red-300 bg-red-50 rounded-lg">
+                Error fetching data: {error}
               </div>
             </div>
-          ) : (
+          )}
+
+          {/* CONTENT - Only show when data is loaded */}
+          {!loading && !error && (
             <>
               {filteredLeads.length === 0 ? (
                 <p className="text-center text-gray-600 mt-10">

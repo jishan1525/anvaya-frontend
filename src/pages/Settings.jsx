@@ -9,7 +9,7 @@ const Settings = () => {
 
   const [leads, setLeads] = useState([]);
   const [agents, setAgent] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // DELETE AGENT
@@ -42,6 +42,7 @@ const Settings = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setError(null);
         setLoading(true);
 
         const agentsData = await axios.get(AGENT_API);
@@ -60,9 +61,6 @@ const Settings = () => {
     // eslint-disable-next-line
   }, []);
 
-  if (loading) return <p className="text-center pt-10">Loading...</p>;
-  if (error) return <p className="text-center pt-10 text-red-500">{error}</p>;
-
   return (
     <div className="min-h-screen bg-gray-50 relative">
 
@@ -77,59 +75,81 @@ const Settings = () => {
       {/* MAIN CONTENT */}
       <div className="p-6 md:pl-56">
 
-        {/* LEADS LIST */}
-        <div className="bg-white p-6 rounded-xl shadow-md mb-10">
-          <h2 className="text-xl font-semibold mt-6 mb-4">Leads</h2>
-
-          {leads.length === 0 && (
-            <p className="text-gray-500">No leads available</p>
-          )}
-
-          <div className="space-y-3">
-            {leads.map((lead) => (
-              <div
-                key={lead.id}
-                className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-100 transition"
-              >
-                <p className="font-medium">{lead.name}</p>
-
-                <button
-                  onClick={() => handleLeadDelete(lead.id)}
-                  className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md shadow"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+        {/* LOADING STATE */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-32">
+            <div className="animate-spin h-10 w-10 border-4 border-sky-500 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-xl text-sky-600 font-medium">Loading settings...</p>
           </div>
-        </div>
+        )}
 
-        {/* AGENTS LIST */}
-        <div className="bg-white p-6 rounded-xl shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Agents</h2>
-
-          {agents.length === 0 && (
-            <p className="text-gray-500">No agents available</p>
-          )}
-
-          <div className="space-y-3">
-            {agents.map((agent) => (
-              <div
-                key={agent._id}
-                className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-100 transition"
-              >
-                <p className="font-medium">{agent.name}</p>
-
-                <button
-                  onClick={() => handleAgentDelete(agent._id)}
-                  className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md shadow"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
+        {/* ERROR STATE */}
+        {error && !loading && (
+          <div className="flex items-center justify-center py-32">
+            <div className="text-xl text-red-600 p-4 border border-red-300 bg-red-50 rounded-lg">
+              Error fetching data: {error}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* CONTENT - Only show when data is loaded */}
+        {!loading && !error && (
+          <>
+            {/* LEADS LIST */}
+            <div className="bg-white p-6 rounded-xl shadow-md mb-10">
+              <h2 className="text-xl font-semibold mt-6 mb-4">Leads</h2>
+
+              {leads.length === 0 && (
+                <p className="text-gray-500">No leads available</p>
+              )}
+
+              <div className="space-y-3">
+                {leads.map((lead) => (
+                  <div
+                    key={lead.id}
+                    className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <p className="font-medium">{lead.name}</p>
+
+                    <button
+                      onClick={() => handleLeadDelete(lead.id)}
+                      className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md shadow"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AGENTS LIST */}
+            <div className="bg-white p-6 rounded-xl shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Agents</h2>
+
+              {agents.length === 0 && (
+                <p className="text-gray-500">No agents available</p>
+              )}
+
+              <div className="space-y-3">
+                {agents.map((agent) => (
+                  <div
+                    key={agent._id}
+                    className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-100 transition"
+                  >
+                    <p className="font-medium">{agent.name}</p>
+
+                    <button
+                      onClick={() => handleAgentDelete(agent._id)}
+                      className="text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md shadow"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
       </div>
     </div>

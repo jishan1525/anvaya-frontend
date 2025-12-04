@@ -10,7 +10,7 @@ const LeadDetail = () => {
   //state variables
   const [lead, setLead] = useState({});
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [agentId, setAgentId] = useState("");
   const [comment, setComment] = useState("");
@@ -149,6 +149,7 @@ const LeadDetail = () => {
         });
         fetchComments();
         setComment("");
+        setAgentId("");
       })
       .catch((err) => {
         console.error("Error:", err);
@@ -157,24 +158,6 @@ const LeadDetail = () => {
         });
       });
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
-        <div className="text-xl text-sky-600">Loading lead data...</div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-50">
-        <div className="text-xl text-red-600 p-4 border border-red-300 bg-red-50 rounded-lg">
-          Error fetching data: {error}
-        </div>
-      </div>
-    );
-  }
 
   const agentName = agents?.find((agent) => agent?._id === lead?.salesAgent);
 
@@ -185,141 +168,164 @@ const LeadDetail = () => {
 
       {/* HEADER - Position below mobile menu, shift right on desktop */}
       <h1 className="font-extrabold text-3xl sm:text-4xl p-6 text-center bg-sky-600 text-white sticky top-16 md:top-0 z-20 shadow-lg md:pl-56">
-        Lead Management : {lead?.name}
+        Lead Management {!loading && lead?.name ? `: ${lead.name}` : ""}
       </h1>
 
       {/* MAIN CONTENT - Shift right on desktop */}
       <div className="md:pl-56 p-8 space-y-8">
-        {/* LEAD DETAILS CARD */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mt-2">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4 ">
-            Lead Details
-          </h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700">
-            <p>
-              <span className="font-medium text-gray-600">Lead Name:</span>{" "}
-              {lead?.name}
-            </p>
-            <p>
-              <span className="font-medium text-gray-600">Sales Agent:</span>{" "}
-              {agentName?.name}
-            </p>
-            <p>
-              <span className="font-medium text-gray-600">Lead Source:</span>{" "}
-              {lead?.source}
-            </p>
-            <p>
-              <span className="font-medium text-gray-600">Lead Status:</span>{" "}
-              {lead?.status}
-            </p>
-            <p>
-              <span className="font-medium text-gray-600">Priority:</span>{" "}
-              {lead?.priority}
-            </p>
-            <p>
-              <span className="font-medium text-gray-600">
-                Time to Close:
-              </span>{" "}
-              {lead?.timeToClose} Days
-            </p>
+        {/* LOADING STATE */}
+        {loading && (
+          <div className="flex flex-col items-center justify-center py-32">
+            <div className="animate-spin h-10 w-10 border-4 border-sky-500 border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-xl text-sky-600 font-medium">Loading lead data...</p>
           </div>
+        )}
 
-          <div className="mt-6">
-            <button
-              onClick={openEditModal}
-              className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 shadow"
-            >
-              Edit Lead
-            </button>
+        {/* ERROR STATE */}
+        {error && !loading && (
+          <div className="flex items-center justify-center py-32">
+            <div className="text-xl text-red-600 p-4 border border-red-300 bg-red-50 rounded-lg">
+              Error fetching data: {error}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* COMMENT SECTION */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-            Comments
-          </h2>
+        {/* CONTENT - Only show when data is loaded */}
+        {!loading && !error && (
+          <>
+            {/* LEAD DETAILS CARD */}
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200 mt-2">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4 ">
+                Lead Details
+              </h2>
 
-          {/* Comments Display */}
-          {comments && comments.length > 0 ? (
-            <div className="space-y-3 mb-6">
-              {comments.map((comm, index) => (
-                <div
-                  key={index}
-                  className="border border-gray-200 rounded-lg p-3 bg-gray-50 shadow-sm"
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700">
+                <p>
+                  <span className="font-medium text-gray-600">Lead Name:</span>{" "}
+                  {lead?.name}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Sales Agent:</span>{" "}
+                  {agentName?.name}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Lead Source:</span>{" "}
+                  {lead?.source}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Lead Status:</span>{" "}
+                  {lead?.status}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">Priority:</span>{" "}
+                  {lead?.priority}
+                </p>
+                <p>
+                  <span className="font-medium text-gray-600">
+                    Time to Close:
+                  </span>{" "}
+                  {lead?.timeToClose} Days
+                </p>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  onClick={openEditModal}
+                  className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 shadow"
                 >
-                  <p className="text-gray-800">{comm.commentText}</p>
-                  <div className="text-sm text-gray-500 mt-1">
-                    <span>{comm.authorName}</span> •{" "}
-                    <span>
-                      {new Date(comm.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
+                  Edit Lead
+                </button>
+              </div>
+            </div>
+
+            {/* COMMENT SECTION */}
+            <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+                Comments
+              </h2>
+
+              {/* Comments Display */}
+              {comments && comments.length > 0 ? (
+                <div className="space-y-3 mb-6">
+                  {comments.map((comm, index) => (
+                    <div
+                      key={index}
+                      className="border border-gray-200 rounded-lg p-3 bg-gray-50 shadow-sm"
+                    >
+                      <p className="text-gray-800">{comm.commentText}</p>
+                      <div className="text-sm text-gray-500 mt-1">
+                        <span>{comm.authorName}</span> •{" "}
+                        <span>
+                          {new Date(comm.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500 italic mb-6">
-              No comments found yet.
-            </p>
-          )}
+              ) : (
+                <p className="text-gray-500 italic mb-6">
+                  No comments found yet.
+                </p>
+              )}
 
-          {/* Add Comment Form */}
-          <form
-            onSubmit={formSubmitHandler}
-            className="space-y-4 border-t pt-4"
-          >
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-600 mb-1"
+              {/* Add Comment Form */}
+              <form
+                onSubmit={formSubmitHandler}
+                className="space-y-4 border-t pt-4"
               >
-                Select Agent
-              </label>
-              <select
-                id="name"
-                onChange={agentNameHandler}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              >
-                <option value="">-- Select an Agent --</option>
-                {agents ? (
-                  agents.map((agent) => (
-                    <option key={agent._id} value={agent._id}>
-                      {agent.name}
-                    </option>
-                  ))
-                ) : (
-                  <option>Loading...</option>
-                )}
-              </select>
-            </div>
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-600 mb-1"
+                  >
+                    Select Agent
+                  </label>
+                  <select
+                    id="name"
+                    value={agentId}
+                    onChange={agentNameHandler}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  >
+                    <option value="">-- Select an Agent --</option>
+                    {agents ? (
+                      agents.map((agent) => (
+                        <option key={agent._id} value={agent._id}>
+                          {agent.name}
+                        </option>
+                      ))
+                    ) : (
+                      <option>Loading...</option>
+                    )}
+                  </select>
+                </div>
 
-            <div>
-              <label
-                htmlFor="comment"
-                className="block text-sm font-medium text-gray-600 mb-1"
-              >
-                Add Comment
-              </label>
-              <textarea
-                id="comment"
-                rows={4}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="Type your comment here..."
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              ></textarea>
-            </div>
+                <div>
+                  <label
+                    htmlFor="comment"
+                    className="block text-sm font-medium text-gray-600 mb-1"
+                  >
+                    Add Comment
+                  </label>
+                  <textarea
+                    id="comment"
+                    rows={4}
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                    placeholder="Type your comment here..."
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  ></textarea>
+                </div>
 
-            <button
-              type="submit"
-              className="bg-sky-600 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-sky-700 transition-all w-full sm:w-auto"
-            >
-              Add Comment
-            </button>
-          </form>
-        </div>
+                <button
+                  type="submit"
+                  className="bg-sky-600 text-white px-6 py-2 rounded-lg font-medium shadow-md hover:bg-sky-700 transition-all w-full sm:w-auto"
+                >
+                  Add Comment
+                </button>
+              </form>
+            </div>
+          </>
+        )}
       </div>
 
       {/* EDIT MODAL */}
